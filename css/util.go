@@ -1,7 +1,7 @@
 package css
 
 import (
-	"github.com/tdewolff/parse/v2/buffer"
+	"github.com/ezoic/parse/buffer"
 )
 
 // IsIdent returns true if the bytes are a valid identifier.

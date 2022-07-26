@@ -1,7 +1,7 @@
 // +build gofuzz
 package fuzz
 
-import "github.com/tdewolff/parse/v2"
+import "github.com/ezoic/parse"
 
 func Fuzz(data []byte) int {
 	data = parse.Copy(data) // ignore const-input error for OSS-Fuzz
