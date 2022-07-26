@@ -2,15 +2,6 @@
 
 This package is an XML lexer written in [Go][1]. It follows the specification at [Extensible Markup Language (XML) 1.0 (Fifth Edition)](http://www.w3.org/TR/REC-xml/). The lexer takes an io.Reader and converts it into tokens until the EOF.
 
-## Installation
-Run the following command
-
-	go get -u github.com/tdewolff/parse/v2/xml
-
-or add the following import and run project with `go get`
-
-	import "github.com/tdewolff/parse/v2/xml"
-
 ## Lexer
 ### Usage
 The following initializes a new Lexer with io.Reader `r`:

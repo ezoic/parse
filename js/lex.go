@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"unicode"
 
-	"github.com/tdewolff/parse/v2/buffer"
+	"github.com/ezoic/parse/buffer"
 )
 
 var identifierStart = []*unicode.RangeTable{unicode.Lu, unicode.Ll, unicode.Lt, unicode.Lm, unicode.Lo, unicode.Nl, unicode.Other_ID_Start}

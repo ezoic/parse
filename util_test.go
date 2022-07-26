@@ -242,11 +242,26 @@ func TestEncodeURL(t *testing.T) {
 		{"AZaz09-_.!~*'()", "AZaz09-_.!~*'()"},
 		{"<>", "%3C%3E"},
 		{"\u2318", "%E2%8C%98"},
-		{"a b", "a+b"},
+		{"a b", "a%20b"},
 	}
 	for _, tt := range urlTests {
 		t.Run(tt.url, func(t *testing.T) {
 			b := EncodeURL([]byte(tt.url), URLEncodingTable)
+			test.T(t, string(b), tt.expected, "in '"+tt.url+"'")
+		})
+	}
+}
+
+func TestEncodeDataURI(t *testing.T) {
+	var urlTests = []struct {
+		url      string
+		expected string
+	}{
+		{`<svg xmlns="http://www.w3.org/2000/svg"></svg>`, `%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3C/svg%3E`},
+	}
+	for _, tt := range urlTests {
+		t.Run(tt.url, func(t *testing.T) {
+			b := EncodeURL([]byte(tt.url), DataURIEncodingTable)
 			test.T(t, string(b), tt.expected, "in '"+tt.url+"'")
 		})
 	}

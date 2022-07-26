@@ -2,15 +2,6 @@
 
 This package is a JSON lexer (ECMA-404) written in [Go][1]. It follows the specification at [JSON](http://json.org/). The lexer takes an io.Reader and converts it into tokens until the EOF.
 
-## Installation
-Run the following command
-
-	go get -u github.com/tdewolff/parse/v2/json
-
-or add the following import and run project with `go get`
-
-	import "github.com/tdewolff/parse/v2/json"
-
 ## Parser
 ### Usage
 The following initializes a new Parser with io.Reader `r`:

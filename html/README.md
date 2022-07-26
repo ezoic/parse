@@ -2,15 +2,6 @@
 
 This package is an HTML5 lexer written in [Go][1]. It follows the specification at [The HTML syntax](http://www.w3.org/TR/html5/syntax.html). The lexer takes an io.Reader and converts it into tokens until the EOF.
 
-## Installation
-Run the following command
-
-	go get -u github.com/tdewolff/parse/v2/html
-
-or add the following import and run project with `go get`
-
-	import "github.com/tdewolff/parse/v2/html"
-
 ## Lexer
 ### Usage
 The following initializes a new Lexer with io.Reader `r`:

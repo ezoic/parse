@@ -6,7 +6,7 @@ import (
 	"io"
 	"testing"
 
-	"github.com/tdewolff/parse/v2"
+	"github.com/ezoic/parse"
 	"github.com/tdewolff/test"
 )
 

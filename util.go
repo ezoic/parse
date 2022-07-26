@@ -2,7 +2,9 @@ package parse
 
 import (
 	"bytes"
+	"fmt"
 	"strconv"
+	"unicode"
 )
 
 // Copy returns a copy of the given byte slice.
@@ -34,6 +36,16 @@ func EqualFold(s, targetLower []byte) bool {
 		}
 	}
 	return true
+}
+
+// Printable returns a printable string for given rune
+func Printable(r rune) string {
+	if unicode.IsGraphic(r) {
+		return fmt.Sprintf("%c", r)
+	} else if r < 128 {
+		return fmt.Sprintf("0x%02X", r)
+	}
+	return fmt.Sprintf("%U", r)
 }
 
 var whitespaceTable = [256]bool{
@@ -339,6 +351,7 @@ func ReplaceMultipleWhitespaceAndEntities(b []byte, entitiesMap map[string][]byt
 	return b[:j]
 }
 
+// URLEncodingTable is a charmap for which characters need escaping in the URL encoding scheme
 var URLEncodingTable = [256]bool{
 	// ASCII
 	true, true, true, true, true, true, true, true,
@@ -383,16 +396,18 @@ var URLEncodingTable = [256]bool{
 	true, true, true, true, true, true, true, true,
 }
 
-// URL encoding for Data URIs, escape only non-printable characters, unicode and %, #, &
+// DataURIEncodingTable is a charmap for which characters need escaping in the Data URI encoding scheme
+// Escape only non-printable characters, unicode and %, #, &.
 // IE11 additionally requires encoding of \, [, ], ", <, >, `, {, }, |, ^ which is not required by Chrome, Firefox, Opera, Edge, Safari, Yandex
+// To pass the HTML validator, restricted URL characters must be escaped: non-printable characters, space, <, >, #, %, "
 var DataURIEncodingTable = [256]bool{
 	// ASCII
 	true, true, true, true, true, true, true, true,
-	true, false, false, true, true, false, true, true, // all except \t, \n, \r
+	true, true, true, true, true, true, true, true,
 	true, true, true, true, true, true, true, true,
 	true, true, true, true, true, true, true, true,
 
-	false, false, true, true, false, true, true, false, // ", #, %, &
+	true, false, true, true, false, true, true, false, // space, ", #, %, &
 	false, false, false, false, false, false, false, false,
 	false, false, false, false, false, false, false, false,
 	false, false, false, false, true, false, true, false, // <, >
@@ -429,30 +444,28 @@ var DataURIEncodingTable = [256]bool{
 	true, true, true, true, true, true, true, true,
 }
 
+// EncodeURL encodes bytes using the URL encoding scheme
 func EncodeURL(b []byte, table [256]bool) []byte {
 	for i := 0; i < len(b); i++ {
 		c := b[i]
 		if table[c] {
-			if c == ' ' {
-				b[i] = '+'
-			} else {
-				b = append(b, 0, 0)
-				copy(b[i+3:], b[i+1:])
-				b[i+0] = '%'
-				b[i+1] = "0123456789ABCDEF"[c>>4]
-				b[i+2] = "0123456789ABCDEF"[c&15]
-			}
+			b = append(b, 0, 0)
+			copy(b[i+3:], b[i+1:])
+			b[i+0] = '%'
+			b[i+1] = "0123456789ABCDEF"[c>>4]
+			b[i+2] = "0123456789ABCDEF"[c&15]
 		}
 	}
 	return b
 }
 
+// DecodeURL decodes an URL encoded using the URL encoding scheme
 func DecodeURL(b []byte) []byte {
 	for i := 0; i < len(b); i++ {
 		if b[i] == '%' && i+2 < len(b) {
 			j := i + 1
 			c := 0
-			for ; j < i+3 && (b[j] >= '0' && b[j] <= '9' || b[j] >= 'a' && b[j] <= 'z' || b[j] >= 'A' && b[j] <= 'Z'); j++ {
+			for ; j < i+3 && (b[j] >= '0' && b[j] <= '9' || b[j] >= 'a' && b[j] <= 'f' || b[j] >= 'A' && b[j] <= 'F'); j++ {
 				if b[j] <= '9' {
 					c = c<<4 + int(b[j]-'0')
 				} else if b[j] <= 'F' {
