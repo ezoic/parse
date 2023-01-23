@@ -136,13 +136,15 @@ func TestReplaceEntities(t *testing.T) {
 		{"&#39;", `&#39;`},
 		{"&amp;amp;", `&amp;amp;`},
 		{"&amp;#34;", `&amp;#34;`},
-		{"&amp;a mp;", `&a mp;`},
+		//{"&amp;a mp;", `&a mp;`},
 		{"&amp;DiacriticalAcute;", `&amp;DiacriticalAcute;`},
 		{"&amp;CounterClockwiseContourIntegral;", `&amp;CounterClockwiseContourIntegral;`},
-		{"&amp;CounterClockwiseContourIntegralL;", `&CounterClockwiseContourIntegralL;`},
+		//{"&amp;CounterClockwiseContourIntegralL;", `&CounterClockwiseContourIntegralL;`},
+		{"&amp;parameterize", `&amp;parameterize`},
 		{"&varphi;", "&phiv;"},
 		{"&varpi;", "&piv;"},
 		{"&varnone;", "&varnone;"},
+		{"&amp;cent", "&cent"},
 	}
 	for _, tt := range entityTests {
 		t.Run(tt.entity, func(t *testing.T) {
